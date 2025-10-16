@@ -18,70 +18,99 @@
         .clock-container {
             background-color: #fff;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
             text-align: center;
         }
 
-        #time {
-            font-size: 2.5em;
+        .clock-logo {
+            width: 50px;
+            height: 50px;
             margin-bottom: 10px;
         }
 
-        #date {
+        .time {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .date {
             font-size: 1.2em;
             color: #777;
         }
 
-        .time-toggle {
-            margin-top: 15px;
+        .toggle-button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
     <div class="clock-container">
-        <div id="time"></div>
-        <div id="date"></div>
-        <div class="time-toggle">
-            <label for="timeZone">Select Time Zone:</label>
-            <select id="timeZone">
-                <option value="IST">Indian Standard Time (IST)</option>
-                <option value="PST">Pacific Standard Time (PST)</option>
-            </select>
-        </div>
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAAgAAAACshE6XAAAAjUlEQVRYCe3SQQ2DMBAE0Vv4TgGY4CzBAqjczKyuJ0IZH0j5CvWI7JWyfH4sE1euXLeuXLl3L1y5d+7cuXfv3Ll379y5d+7cuXfv3Ll379y5d+7cuXfv3Ll379y5d+7cuXfv3Ll379y5d+7cuXfv3Ll379y5d+7cuXfv3Ln3y0AOz3l0HwAAAABJRU5ErkJggg==" alt="Clock Logo" class="clock-logo">
+        <div class="time" id="time"></div>
+        <div class="date" id="date"></div>
+        <button class="toggle-button" id="toggleButton">Show PST</button>
     </div>
 
     <script>
         function updateTime() {
-            const timeZone = document.getElementById('timeZone').value;
-            let now;
-
-            if (timeZone === 'IST') {
-                now = new Date();
-            } else {
-                now = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+            let now = new Date();
+            let timeZone = 'Asia/Kolkata'; // Default to IST
+            if (document.getElementById('toggleButton').innerText === 'Show IST') {
+                timeZone = 'America/Los_Angeles'; // Switch to PST
             }
-            
-            let hours = now.getHours();
-            const minutes = now.getMinutes();
-            const seconds = now.getSeconds();
-            const day = now.getDate();
-            const month = now.getMonth() + 1;
-            const year = now.getFullYear();
 
-            const formattedTime = `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
-            const formattedDate = `${padZero(day)}/${padZero(month)}/${year}`;
+            let options = {
+                timeZone: timeZone,
+                hour12: true,
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric'
+            };
 
-            document.getElementById('time').textContent = formattedTime;
-            document.getElementById('date').textContent = formattedDate;
+            let dateTimeFormat = new Intl.DateTimeFormat('en-IN', options);
+            let formattedTime = dateTimeFormat.format(now);
+
+            let dateOptions = {
+                timeZone: timeZone,
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+
+            let dateFormat = new Intl.DateTimeFormat('en-IN', dateOptions);
+            let formattedDate = dateFormat.format(now);
+
+
+            document.getElementById('time').innerText = formattedTime;
+            document.getElementById('date').innerText = formattedDate;
         }
 
-        function padZero(num) {
-            return num < 10 ? "0" + num : num;
+        function toggleTimeZone() {
+            let button = document.getElementById('toggleButton');
+            if (button.innerText === 'Show PST') {
+                button.innerText = 'Show IST';
+            } else {
+                button.innerText = 'Show PST';
+            }
+            updateTime();
         }
+
 
         updateTime();
         setInterval(updateTime, 1000);
+        document.getElementById('toggleButton').addEventListener('click', toggleTimeZone);
     </script>
 </body>
 </html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Standard Time Clock</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        .clock-container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        #clock {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #date {
+            font-size: 1.2em;
+            color: #777;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 600px) {
+            #clock {
+                font-size: 2em;
+            }
+
+            #date {
+                font-size: 1em;
+            }
+
+            .clock-container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="clock-container">
+        <div id="clock"></div>
+        <div id="date"></div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const istOffset = 5.5 * 60 * 60 * 1000; // IST is 5:30 ahead of UTC
+            const istTime = new Date(now.getTime() + istOffset);
+
+            const hours = istTime.getHours().toString().padStart(2, '0');
+            const minutes = istTime.getMinutes().toString().padStart(2, '0');
+            const seconds = istTime.getSeconds().toString().padStart(2, '0');
+
+            const year = istTime.getFullYear();
+            const month = (istTime.getMonth() + 1).toString().padStart(2, '0');
+            const day = istTime.getDate().toString().padStart(2, '0');
+
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds} IST`;
+            document.getElementById('date').textContent = `${year}-${month}-${day}`;
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock(); // Initial call to avoid delay on page load
+    </script>
+</body>
+</html>
+```
